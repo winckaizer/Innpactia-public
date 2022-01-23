@@ -1,8 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const conn = require("../connection");
 const router = express.Router();
 
 const jwt = require("jsonwebtoken");
+
+var auth = require("../services/authentication");
+var chrole = require("../services/checkRole");
 
 router.post("/signup", (req, res) => {
 	const user = req.body;
@@ -53,7 +57,7 @@ router.post("/login", (req, res) => {
 	});
 });
 
-router.get("/", (req, res) => {
+router.get("/", auth.authenticateToken, (req, res) => {
 	const data = req.body;
 
 	sql = "SELECT user_id as id, fullname, email, passw, role, status FROM users";
@@ -72,7 +76,7 @@ router.get("/", (req, res) => {
 	});
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth.authenticateToken, (req, res) => {
 	const data = req.body;
 
 	sql = "SELECT email FROM users WHERE email = ?";
@@ -98,7 +102,7 @@ router.post("/", (req, res) => {
 	});
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", auth.authenticateToken, (req, res) => {
 	const { id } = req.params;
 
 	sql = `DELETE FROM users WHERE user_id = ?`;
@@ -111,7 +115,7 @@ router.delete("/:id", (req, res) => {
 	});
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", auth.authenticateToken, (req, res) => {
 	const { id } = req.params;
 	const data = req.body;
 

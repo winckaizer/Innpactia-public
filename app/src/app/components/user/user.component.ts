@@ -37,6 +37,8 @@ export class UserComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.userService.checkToken();
+
 		this.listUserData();
 	}
 

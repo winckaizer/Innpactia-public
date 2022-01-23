@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Client } from 'src/app/models/Client';
 import { Phone } from 'src/app/models/Phone';
@@ -9,6 +9,11 @@ import { PhoneService } from 'src/app/services/phone.service';
 import { NgSelectComponent } from "@ng-select/ng-select";
 import { RepairService } from 'src/app/services/repair.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Repair } from 'src/app/models/Repair';
+import { formatDate, registerLocaleData } from '@angular/common';
+import localeES from "@angular/common/locales/es";
+import { UserService } from 'src/app/services/user.service';
+registerLocaleData(localeES, "es");
 
 @Component({
 	selector: 'app-repair',
@@ -39,7 +44,8 @@ export class RepairComponent implements OnInit {
 	constructor(public frm: FormBuilder, private clientService: ClientService,
 		private phoneService: PhoneService, private modalService: NgbModal,
 		private config: NgbModalConfig, private notifyService: NotificationService,
-		private repairService: RepairService, private router: Router, private activateRoute: ActivatedRoute) {
+		private repairService: RepairService, private router: Router,
+		private activateRoute: ActivatedRoute, private userService: UserService) {
 
 		this.frmRepair = this.frm.group({
 			id: 0,
@@ -54,9 +60,13 @@ export class RepairComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.userService.checkToken();
+
 		this.loadClientList();
 		this.getId = this.activateRoute.snapshot.paramMap.get("id");
-		console.log(this.getId);
+		if (this.getId !== null) {
+			this.listRepairData(this.getId);
+		}
 	}
 
 	reset() {
@@ -78,17 +88,49 @@ export class RepairComponent implements OnInit {
 		});
 	}
 
+	listRepairData(id?: any): any {
+		this.repairService.list(id).subscribe({
+			next: (data) => {
+				this.setFormToEdit(data[0]);
+			},
+			error: (e) => {
+				if (e.status === 500) {
+					this.notifyService.showError(e.error.message, "Error de Servidor");
+				} else if (e.status !== 404) {
+					this.notifyService.showWarning(e.error.message, "Notificacón!");
+				}
+			}
+		});
+	}
+
+	setFormToEdit(data: Repair) {
+		this.changeClientPhone(data.phone.client.id, true);
+
+		let dateO = (data.dateOut !== null) ? formatDate(data.dateOut, 'yyyy-MM-dd', 'en') : "";
+
+		this.frmRepair = this.frm.group({
+			id: data.id,
+			clientId: data.phone.client.id,
+			phoneId: data.phone.id,
+			failure: data.failure,
+			notes: data.notes,
+			dateIn: [formatDate(data.dateIn, 'yyyy-MM-dd', 'en')],
+			dateOut: [dateO],
+			status: data.status
+		});
+
+		let phoneName = data.phone.brand  + " " + data.phone.model  + " " + data.phone.serial;
+
+		this.phoneSelect.select({ value: phoneName})
+
+	}
+
 	sendRepairData() {
 		let repair = this.frmRepair.value;
 		let request = (repair.id > 0) ? this.repairService.update(repair) : this.repairService.save(repair);
-
-		console.log(repair);
-
-
 		request.subscribe({
 			next: (data) => {
 				this.notifyService.showSuccess(data.message, "Exito!");
-				this.reset();
 			},
 			error: (e) => {
 				if (e.status == 500) {
@@ -121,10 +163,12 @@ export class RepairComponent implements OnInit {
 		});
 	}
 
-	changeClientPhone() {
-		this.phoneService.list(this.selectedClient).subscribe({
+	changeClientPhone(selectedClient: any, second: boolean = false) {
+		this.phoneService.list(selectedClient).subscribe({
 			next: (data) => {
-				this.clearPhoneSelect()
+				if (!second) {
+					this.clearPhoneSelect()
+				}
 				this.selectPhone = data;
 			},
 			error: (e) => {
@@ -144,6 +188,14 @@ export class RepairComponent implements OnInit {
 
 	clearPhoneSelect() {
 		this.phoneSelect.select({ value: null, label: "" });
+	}
+
+	parseDate(dateString: any): Date {
+		if (dateString.target.value) {
+			return new Date(dateString);
+		}
+
+		return new Date();
 	}
 
 }

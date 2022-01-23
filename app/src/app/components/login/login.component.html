@@ -1,0 +1,19 @@
+<div class="card text-center mx-auto mt-5" style="width: 25rem;">
+	<div class="card-body">
+		<h5 class="card-title">LogIn</h5>
+		<form [formGroup]="frmLogin" (ngSubmit)="doLogin()">
+			<div class="mb-3 mt-4">
+				<input type="email" formControlName="email" class="form-control" name="" id="email"
+					placeholder="correo electronico">
+			</div>
+			<div class="mb-4">
+				<input type="password" formControlName="passw" class="form-control" name="" id="passw"
+					placeholder="Contraseña">
+			</div>
+			<button type="submit" class="btn btn-primary">
+				<i class="fas fa-key me-1"></i>LogIn
+			</button>
+
+		</form>
+	</div>
+</div>

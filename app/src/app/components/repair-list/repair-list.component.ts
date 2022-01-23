@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from 'src/app/services/notification.service';
 import { RepairService } from 'src/app/services/repair.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
 	selector: 'app-repair-list',
@@ -18,10 +19,11 @@ export class RepairListComponent implements OnInit {
 
 	constructor(public frm: FormBuilder, private modalService: NgbModal, private config: NgbModalConfig,
 		private notifyService: NotificationService, private repairService: RepairService,
-		private router: Router) {
+		private router: Router, private userService: UserService) {
 	}
 
 	ngOnInit(): void {
+		this.userService.checkToken();
 		this.listRepairData();
 	}
 

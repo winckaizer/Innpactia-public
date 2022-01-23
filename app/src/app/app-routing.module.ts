@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ClientComponent } from './components/client/client.component';
+import { LoginComponent } from './components/login/login.component';
 import { PhoneComponent } from './components/phone/phone.component';
 import { RepairListComponent } from './components/repair-list/repair-list.component';
 import { RepairComponent } from './components/repair/repair.component';
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'repair', component: RepairComponent},
   {path: 'repair/:id', component: RepairComponent},
   {path: 'user', component: UserComponent},
-  {path: 'repair-list', component: RepairListComponent}
+  {path: 'repair-list', component: RepairListComponent},
+  {path: 'login', component: LoginComponent}
 ];
 
 @NgModule({

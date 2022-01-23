@@ -17,6 +17,7 @@ import { RepairComponent } from './components/repair/repair.component';
 import { PhoneComponent } from './components/phone/phone.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RepairListComponent } from './components/repair-list/repair-list.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
     declarations: [
@@ -25,7 +26,8 @@ import { RepairListComponent } from './components/repair-list/repair-list.compon
         UserComponent,
         RepairComponent,
         PhoneComponent,
-        RepairListComponent
+        RepairListComponent,
+        LoginComponent
     ],
     imports: [
         BrowserModule,

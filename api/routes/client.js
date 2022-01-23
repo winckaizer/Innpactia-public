@@ -2,7 +2,10 @@ const express = require("express");
 const conn = require("../connection");
 const router = express.Router();
 
-router.get("/", (req, res) => {
+var auth = require("../services/authentication");
+var chrole = require("../services/checkRole");
+
+router.get("/", auth.authenticateToken,(req, res) => {
 	sql = "SELECT client_id as id, idnumber, fullname, address, phoneNumber FROM clients";
 	conn.query(sql, (err, result) => {
 		if (!err) {
@@ -23,7 +26,7 @@ router.get("/:id", (req, res) => {
 	const { id } = req.params;
 
 	sql = `SELECT client_id as id, idnumber, fullname, address, phoneNumber FROM clients WHERE client_id = ${id}`;
-	conn.query(sql, (err, result) => {
+	conn.query(sql, auth.authenticateToken,(err, result) => {
 		if (!err) {
 			if (result.length > 0) {
 				return res.status(200).json(result);
@@ -38,7 +41,7 @@ router.get("/:id", (req, res) => {
 	});
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth.authenticateToken,(req, res) => {
 	const data = req.body;
 
 	sql = "SELECT idnumber FROM clients WHERE idnumber = ?";
@@ -64,7 +67,7 @@ router.post("/", (req, res) => {
 	});
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", auth.authenticateToken,(req, res) => {
 	const { id } = req.params;
 
 	sql = `DELETE FROM clients WHERE client_id = ?`;
@@ -77,7 +80,7 @@ router.delete("/:id", (req, res) => {
 	});
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", auth.authenticateToken,(req, res) => {
 	const { id } = req.params;
 	const data = req.body;
 

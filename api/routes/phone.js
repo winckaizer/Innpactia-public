@@ -2,8 +2,11 @@ const express = require("express");
 const conn = require("../connection");
 const router = express.Router();
 
-router.get("/client/:id", (req, res) => {
-	const {id} = req.params;
+var auth = require("../services/authentication");
+var chrole = require("../services/checkRole");
+
+router.get("/client/:id", auth.authenticateToken, (req, res) => {
+	const { id } = req.params;
 
 	sql = `SELECT phone_id as id, brand, model, serial, c.client_id, c.idnumber, c.fullname, c.address, c.phoneNumber
 		FROM clients_phones p INNER JOIN clients c ON (c.client_id = p.client_id) WHERE c.client_id = ?`;
@@ -39,7 +42,7 @@ router.get("/client/:id", (req, res) => {
 	});
 });
 
-router.post("/", (req, res) => {
+router.post("/", auth.authenticateToken, (req, res) => {
 	const data = req.body;
 
 	sql = "SELECT phone_id as id, brand, model, serial FROM clients_phones WHERE serial = ?";
@@ -65,7 +68,7 @@ router.post("/", (req, res) => {
 	});
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", auth.authenticateToken, (req, res) => {
 	const { id } = req.params;
 
 	sql = `DELETE FROM clients_phones WHERE phone_id = ?`;
@@ -78,7 +81,7 @@ router.delete("/:id", (req, res) => {
 	});
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", auth.authenticateToken, (req, res) => {
 	const { id } = req.params;
 	const data = req.body;
 

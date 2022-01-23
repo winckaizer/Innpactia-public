@@ -9,7 +9,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-lg-0">
+        <ul *ngIf="checkSession" class="navbar-nav ms-auto mb-lg-0">
           <li class="nav-item me-2">
             <a class="nav-link" routerLink="repair-list">Reparaciones</a>
           </li>
@@ -19,13 +19,8 @@
           <li class="nav-item me-2">
             <a class="nav-link" routerLink="user">Usuarios</a>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Username
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Salir</a></li>
-            </ul>
+		  <li class="nav-item me-2">
+            <a class="nav-link" href="javascrip:void(0)" (click)="logOut()">Salir</a>
           </li>
         </ul>
       </div>

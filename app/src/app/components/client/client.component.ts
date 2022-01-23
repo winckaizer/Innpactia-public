@@ -6,6 +6,7 @@ import { NgbModal, ModalDismissReasons, NgbModalConfig } from '@ng-bootstrap/ng-
 import { Client } from 'src/app/models/Client';
 import { ClientService } from "src/app/services/client.service";
 import { NotificationService } from 'src/app/services/notification.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
 	selector: 'app-clients',
@@ -24,7 +25,7 @@ export class ClientComponent implements OnInit {
 
 	constructor(public frm: FormBuilder, private clientService: ClientService,
 		private modalService: NgbModal, private config: NgbModalConfig,
-		private notifyService: NotificationService) {
+		private notifyService: NotificationService, private userService: UserService) {
 		config.backdrop = 'static';
 		config.keyboard = false;
 		config.windowClass = ""
@@ -40,6 +41,8 @@ export class ClientComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.userService.checkToken();
+
 		this.listClientData();
 	}
 
