@@ -1,0 +1,103 @@
+<div class="card">
+	<div class="card-header">
+		<div class="row mt-2">
+			<div class="col-sm-10">
+				<h5>Listado de Clientes</h5>
+			</div>
+			<div class="col-sm-2 text-end">
+				<button class="btn btn-sm btn-primary ms-auto" (click)="openModal(clientModal, 'add')">
+					<i class="fas fa-plus"></i> Nuevo
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th scope="col">Numero ID</th>
+					<th scope="col">Nombre del Cliente</th>
+					<th scope="col">Telefono</th>
+					<th scope="col">Direcci&oacute;n</th>
+					<th scope="col">Acciones</th>
+				</tr>
+			</thead>
+
+			<tbody *ngIf="showTable">
+				<tr *ngFor="let client of clientInfo; let i = index">
+					<td>{{ client.idnumber }}</td>
+					<td>{{ client.fullname }}</td>
+					<td>{{ client.phoneNumber }}</td>
+					<td>{{ client.address }}</td>
+					<td>
+						<a class="btn btn-dark btn-sm me-1" role="button" (click)="phonesClientData(phoneModal, client)"
+							ngbTooltip="Lista de Dispositivos">
+							<i class="fas fa-mobile-alt"></i>
+						</a>
+						<a class="btn btn-info btn-sm me-1" role="button" (click)="editClient(clientModal, client)"
+							ngbTooltip="Editar Cliente">
+							<i class="fas fa-pen-square"></i>
+						</a>
+						<a class="btn btn-danger btn-sm" role="button" (click)="deleteClientData(client, i)"
+							ngbTooltip="Eliminar Cliente">
+							<i class="fas fa-trash-alt"></i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+
+			<tbody *ngIf="!showTable">
+				<tr>
+					<td colspan="4">No se encontraron registros para mostrar</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<ng-template #clientModal let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title" id="clientModalLabel">
+			{{ ModalTitle }} Cliente
+		</h5>
+		<button type="button" class="btn-close" (click)="modal.close()"></button>
+	</div>
+	<form [formGroup]="frmClient" (ngSubmit)="sendClientData()">
+		<div class="modal-body">
+			<div class="mb-3">
+				<label for="idNumber" class="form-label">Numero de Identificacion</label>
+				<input type="text" formControlName="idnumber" class="form-control" name="" id="idNumber"
+					aria-describedby="helpId" placeholder="Ingresa el numero de identificacion" required="required" />
+			</div>
+			<div class="mb-3">
+				<label for="fullname" class="form-label">Nombre del Cliente</label>
+				<input type="text" formControlName="fullname" class="form-control" name="" id="fullname"
+					aria-describedby="helpId" placeholder="Ingresa nombre completo del cliente" />
+			</div>
+			<div class="mb-3">
+				<label for="phonenumber" class="form-label">Telefono del Cliente</label>
+				<input type="tel" formControlName="phoneNumber" class="form-control" name="" id="phonenumber"
+					aria-describedby="helpId" placeholder="Ingresa el numero de telefono del cliente" />
+			</div>
+			<div class="mb-3">
+				<label for="address" class="form-label">Direccion del Cliente</label>
+				<textarea formControlName="address" class="form-control" name="" id="address" rows="3"></textarea>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+				(click)="modal.close('cancel')">
+				<i class="fas fa-times"></i> Cancelar
+			</button>
+			<button type="submit" class="btn btn-primary btn-sm">
+				<i class="fas fa-save"></i> Guardar
+			</button>
+		</div>
+	</form>
+</ng-template>
+
+<ng-template #phoneModal let-modal>
+	<app-phone [modal]=modal [client]=onlyClient></app-phone>
+</ng-template>

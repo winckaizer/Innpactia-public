@@ -1,0 +1,82 @@
+<div class="modal-header">
+	<h5 class="modal-title" id="clientModalLabel">
+		Listdo de Dispositivos
+	</h5>
+	<button type="button" class="btn-close" (click)="modal.close()"></button>
+</div>
+<form [formGroup]="frmClientPhone" (ngSubmit)="sendPhoneData()">
+	<div class="modal-body">
+		<div class="mb-3">
+			<label for="client" class="form-label">Cliente</label>
+			<div class="border rounded px-3 py-2">{{client.fullname}}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 col-md-4 col-lg-4">
+				<div class="mb-3">
+					<label for="brand" class="form-label">Marca</label>
+					<input type="text" formControlName="brand" class="form-control" name="" id="brand"
+						aria-describedby="helpId" placeholder="Ingresa la marca del telefono" />
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-4 col-lg-4">
+				<div class="mb-3">
+					<label for="model" class="form-label">Modelo</label>
+					<input type="text" formControlName="model" class="form-control" name="" id="model"
+						aria-describedby="helpId" placeholder="Ingresa el modelo del telefono" />
+				</div>
+			</div>
+			<div class="col-sm-12 col-md-4 col-lg-4">
+				<div class="mb-3">
+					<label for="serial" class="form-label">Serial</label>
+					<input type="text" formControlName="serial" class="form-control" name="" id="serial"
+						aria-describedby="helpId" placeholder="Ingresa el serial del telefono" />
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-bordered table-hover table-sm">
+			<thead>
+				<tr>
+					<th scope="col">Marca</th>
+					<th scope="col">Modelo</th>
+					<th scope="col">Serial</th>
+					<th scope="col">Acciones</th>
+				</tr>
+			</thead>
+
+			<tbody *ngIf="showTable">
+				<tr *ngFor="let phone of phoneInfo; let i = index">
+					<td>{{ phone.brand }}</td>
+					<td>{{ phone.model }}</td>
+					<td>{{ phone.serial }}</td>
+					<td>
+						<a class="btn btn-info btn-sm me-1" role="button" (click)="edit(phone)"
+							ngbTooltip="Editar Dispositivo">
+							<i class="fas fa-pen-square"></i>
+						</a>
+						<a class="btn btn-danger btn-sm" role="button" (click)="delete(phone, i)"
+							ngbTooltip="Eliminar Dispositivo">
+							<i class="fas fa-trash-alt"></i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+
+			<tbody *ngIf="!showTable">
+				<tr>
+					<td colspan="4">No se encontraron registros para mostrar</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" (click)="modal.close()">
+			<i class="fas fa-times"></i> Cancelar
+		</button>
+		<button type="submit" class="btn btn-primary btn-sm">
+			<i class="fas fa-save"></i> Guardar
+		</button>
+	</div>
+</form>
